@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AngelRaise — Design System Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Brand — evolved from original orange */
+    --brand: #F28C28;
+    --brand-hover: #E07B1A;
+    --brand-soft: #FEF3E8;
+    --brand-dark: #C96F1A;
+
+    /* Primary CTA — blue, faithful to original */
+    --primary: #2B7DE9;
+    --primary-hover: #1F6AD4;
+    --primary-soft: #EBF3FE;
+
+    /* Backgrounds */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-muted: #F1F3F5;
+
+    /* Text */
+    --text-primary: #1A1D21;
+    --text-secondary: #5E6572;
+    --text-tertiary: #8C939E;
+
+    /* Semantic */
+    --success: #34A853;
+    --success-soft: #E6F5EB;
+    --warning: #E8A317;
+    --warning-soft: #FEF7E6;
+    --error: #D93025;
+
+    /* Borders */
+    --border: #E8EAED;
+    --border-strong: #D1D5DB;
+
+    /* Typography */
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body: 'Nunito Sans', system-ui, sans-serif;
+    --font-logo: 'Nunito Sans', system-ui, sans-serif;
+
+    /* Radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); padding: 48px; max-width: 1200px; margin: 0 auto; }
+
+  h1 { font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; margin-bottom: 8px; }
+  h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin: 56px 0 24px; border-bottom: 2px solid var(--border); padding-bottom: 12px; }
+  h3 { font-family: var(--font-body); font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); margin-bottom: 16px; }
+  .subtitle { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 48px; }
+
+  /* Color swatches */
+  .colors { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); }
+  .swatch-color { height: 72px; }
+  .swatch-info { padding: 10px 12px; }
+  .swatch-name { font-weight: 600; font-size: 0.8125rem; margin-bottom: 2px; }
+  .swatch-hex { font-size: 0.6875rem; color: var(--text-tertiary); font-family: 'SF Mono', 'Fira Code', monospace; }
+
+  /* Typography */
+  .type-sample { margin-bottom: 20px; padding: 20px; background: var(--bg-secondary); border-radius: var(--radius-md); }
+  .type-label { font-size: 0.6875rem; color: var(--text-tertiary); margin-bottom: 8px; font-family: 'SF Mono', 'Fira Code', monospace; letter-spacing: 0.02em; }
+
+  /* Radii */
+  .radii { display: flex; gap: 20px; flex-wrap: wrap; }
+  .radius-box { width: 72px; height: 72px; background: var(--brand); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.6875rem; font-weight: 700; }
+
+  /* Buttons */
+  .buttons { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .btn { font-family: var(--font-body); font-weight: 700; font-size: 0.9375rem; padding: 12px 28px; border-radius: var(--radius-md); border: none; cursor: pointer; transition: all 0.15s ease; letter-spacing: -0.01em; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(43,125,233,0.3); }
+  .btn-brand { background: var(--brand); color: white; }
+  .btn-brand:hover { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(242,140,40,0.3); }
+  .btn-secondary { background: var(--bg-primary); color: var(--text-primary); border: 1.5px solid var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-secondary); border-color: var(--text-tertiary); }
+  .btn-ghost { background: transparent; color: var(--primary); }
+  .btn-ghost:hover { background: var(--primary-soft); }
+  .btn-success { background: var(--success); color: white; }
+
+  /* Shadows */
+  .shadows { display: flex; gap: 32px; flex-wrap: wrap; }
+  .shadow-box { width: 150px; height: 96px; background: var(--bg-primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500; }
+
+  /* Sample nav */
+  .nav-demo { background: var(--bg-primary); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-lg); margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+  .nav-logo { font-family: var(--font-logo); font-size: 1.5rem; font-weight: 300; color: var(--brand); letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-link { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; }
+  .nav-link:hover { color: var(--text-primary); }
+  .nav-link.active { color: var(--primary); }
+
+  /* Campaign card */
+  .card-demo { max-width: 360px; border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-primary); box-shadow: var(--shadow-md); border: 1px solid var(--border); transition: all 0.2s ease; cursor: pointer; }
+  .card-demo:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .card-img { height: 190px; background: linear-gradient(135deg, rgba(242,140,40,0.08), rgba(43,125,233,0.08)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=200&fit=crop') center/cover; position: relative; }
+  .card-body { padding: 20px; }
+  .card-category { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brand); margin-bottom: 8px; }
+  .card-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; margin-bottom: 8px; line-height: 1.35; }
+  .card-desc { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.55; }
+  .progress-track { height: 8px; background: var(--bg-muted); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 12px; }
+  .progress-fill { height: 100%; border-radius: var(--radius-full); transition: width 0.6s ease; }
+  .progress-fill.brand { background: var(--brand); }
+  .progress-fill.warning { background: var(--warning); }
+  .progress-fill.success { background: var(--success); }
+  .card-stats { display: flex; justify-content: space-between; align-items: center; font-size: 0.8125rem; }
+  .card-raised { font-weight: 700; }
+  .card-goal { color: var(--text-tertiary); }
+  .card-views { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 6px; }
+
+  /* Badge */
+  .badge { display: inline-block; font-size: 0.6875rem; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-full); }
+  .badge-brand { background: var(--brand-soft); color: var(--brand-dark); }
+  .badge-primary { background: var(--primary-soft); color: var(--primary); }
+  .badge-success { background: var(--success-soft); color: var(--success); }
+  .badge-muted { background: var(--bg-muted); color: var(--text-secondary); }
+
+  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  @media (max-width: 768px) { .section-grid { grid-template-columns: 1fr; } }
+
+  /* Watch Ad CTA card */
+  .watch-cta { max-width: 400px; background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--border); }
+  .watch-cta-label { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 12px; font-weight: 500; }
+  .watch-cta-row { display: flex; align-items: center; gap: 16px; }
+  .watch-cta-icon { width: 48px; height: 48px; background: var(--primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; flex-shrink: 0; }
+  .watch-cta-text { font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+  .watch-cta-sub { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<h1>AngelRaise</h1>
+<p class="subtitle">Design System v2 — Modernized, keeping the orange + blue DNA</p>
+
+<!-- COLORS -->
+<h2>Colors</h2>
+
+<h3>Brand (from original orange)</h3>
+<div class="colors" style="margin-bottom:20px">
+  <div class="swatch"><div class="swatch-color" style="background:#F28C28"></div><div class="swatch-info"><div class="swatch-name">Brand</div><div class="swatch-hex">#F28C28</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#E07B1A"></div><div class="swatch-info"><div class="swatch-name">Brand Hover</div><div class="swatch-hex">#E07B1A</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#FEF3E8"></div><div class="swatch-info"><div class="swatch-name">Brand Soft</div><div class="swatch-hex">#FEF3E8</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#C96F1A"></div><div class="swatch-info"><div class="swatch-name">Brand Dark</div><div class="swatch-hex">#C96F1A</div></div></div>
+</div>
+
+<h3>Primary CTA (from original blue)</h3>
+<div class="colors" style="margin-bottom:20px">
+  <div class="swatch"><div class="swatch-color" style="background:#2B7DE9"></div><div class="swatch-info"><div class="swatch-name">Primary</div><div class="swatch-hex">#2B7DE9</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#1F6AD4"></div><div class="swatch-info"><div class="swatch-name">Primary Hover</div><div class="swatch-hex">#1F6AD4</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#EBF3FE"></div><div class="swatch-info"><div class="swatch-name">Primary Soft</div><div class="swatch-hex">#EBF3FE</div></div></div>
+</div>
+
+<h3>Backgrounds & Text</h3>
+<div class="colors" style="margin-bottom:20px">
+  <div class="swatch"><div class="swatch-color" style="background:#FFFFFF; border-bottom:1px solid #E8EAED"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#FFFFFF</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#F8F9FA"></div><div class="swatch-info"><div class="swatch-name">Secondary BG</div><div class="swatch-hex">#F8F9FA</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#F1F3F5"></div><div class="swatch-info"><div class="swatch-name">Muted</div><div class="swatch-hex">#F1F3F5</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#1A1D21"></div><div class="swatch-info"><div class="swatch-name">Text Primary</div><div class="swatch-hex">#1A1D21</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#5E6572"></div><div class="swatch-info"><div class="swatch-name">Text Secondary</div><div class="swatch-hex">#5E6572</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#8C939E"></div><div class="swatch-info"><div class="swatch-name">Text Tertiary</div><div class="swatch-hex">#8C939E</div></div></div>
+</div>
+
+<h3>Semantic</h3>
+<div class="colors">
+  <div class="swatch"><div class="swatch-color" style="background:#34A853"></div><div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#34A853</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#E6F5EB"></div><div class="swatch-info"><div class="swatch-name">Success Soft</div><div class="swatch-hex">#E6F5EB</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#E8A317"></div><div class="swatch-info"><div class="swatch-name">Warning</div><div class="swatch-hex">#E8A317</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#D93025"></div><div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-hex">#D93025</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#E8EAED"></div><div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">#E8EAED</div></div></div>
+</div>
+
+<!-- TYPOGRAPHY -->
+<h2>Typography</h2>
+<div class="section-grid">
+  <div>
+    <h3>Display — Plus Jakarta Sans</h3>
+    <div class="type-sample">
+      <div class="type-label">4xl / 2.5rem — ExtraBold</div>
+      <div style="font-family:var(--font-display); font-size:2.5rem; line-height:1.2; font-weight:800">Fund a cause today</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">3xl / 2rem — Bold</div>
+      <div style="font-family:var(--font-display); font-size:2rem; line-height:1.25; font-weight:700">Baby Blankets for Carle Pediatrics</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">2xl / 1.5rem — Bold</div>
+      <div style="font-family:var(--font-display); font-size:1.5rem; line-height:1.3; font-weight:700">Champaign Food Bank Holiday Drive</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">xl / 1.125rem — Bold (card titles)</div>
+      <div style="font-family:var(--font-display); font-size:1.125rem; line-height:1.35; font-weight:700">Campaign card title</div>
+    </div>
+  </div>
+  <div>
+    <h3>Body — Nunito Sans</h3>
+    <div class="type-sample">
+      <div class="type-label">lg / 1.125rem — Semibold</div>
+      <div style="font-size:1.125rem; font-weight:600">Section heading or emphasis</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">base / 1rem — Regular</div>
+      <div style="font-size:1rem; color:var(--text-secondary); line-height:1.6">Help fund baby blankets for every pediatric patient at Carle Hospital this winter. Your ad views make a difference.</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">sm / 0.875rem — Medium</div>
+      <div style="font-size:0.875rem; font-weight:500; color:var(--text-secondary)">$142.60 raised of $500 goal</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">xs / 0.75rem — Regular</div>
+      <div style="font-size:0.75rem; color:var(--text-tertiary)">2,852 ad views · Created 3 days ago</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Logo — Nunito Sans Light 300</div>
+      <div style="font-family:var(--font-logo); font-size:2rem; font-weight:300; color:var(--brand); letter-spacing:-0.02em">angelraise</div>
+    </div>
+  </div>
+</div>
+
+<!-- BUTTONS -->
+<h2>Buttons</h2>
+<div class="buttons" style="margin-bottom:16px">
+  <button class="btn btn-primary">Take Part</button>
+  <button class="btn btn-brand">Watch an Ad</button>
+  <button class="btn btn-secondary">How it Works</button>
+  <button class="btn btn-ghost">Learn More</button>
+  <button class="btn btn-success">Fully Funded</button>
+</div>
+<p style="font-size:0.8125rem; color:var(--text-tertiary); margin-top:8px">Blue = primary actions (Take Part, Watch Ad CTA) · Orange = brand/accent · Green = success states</p>
+
+<!-- BADGES -->
+<h2>Badges</h2>
+<div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px">
+  <span class="badge badge-brand">Community</span>
+  <span class="badge badge-brand">Education</span>
+  <span class="badge badge-brand">Health</span>
+  <span class="badge badge-primary">4,200 views</span>
+  <span class="badge badge-success">Fully Funded</span>
+  <span class="badge badge-muted">Humanitarian</span>
+</div>
+
+<!-- SHADOWS -->
+<h2>Shadows</h2>
+<div class="shadows">
+  <div class="shadow-box" style="box-shadow: var(--shadow-sm)">shadow-sm</div>
+  <div class="shadow-box" style="box-shadow: var(--shadow-md)">shadow-md</div>
+  <div class="shadow-box" style="box-shadow: var(--shadow-lg)">shadow-lg</div>
+</div>
+
+<!-- BORDER RADII -->
+<h2>Border Radii</h2>
+<div class="radii">
+  <div class="radius-box" style="border-radius:6px">sm 6px</div>
+  <div class="radius-box" style="border-radius:10px">md 10px</div>
+  <div class="radius-box" style="border-radius:14px">lg 14px</div>
+  <div class="radius-box" style="border-radius:20px">xl 20px</div>
+  <div class="radius-box" style="border-radius:9999px; width:72px">full</div>
+</div>
+
+<!-- SAMPLE COMPONENTS -->
+<h2>Sample Components</h2>
+
+<h3>Navigation</h3>
+<div class="nav-demo">
+  <div class="nav-logo">angelraise</div>
+  <div class="nav-links">
+    <a href="#" class="nav-link active">Browse</a>
+    <a href="#" class="nav-link">How it Works</a>
+    <a href="#" class="nav-link">My Impact</a>
+    <button class="btn btn-primary" style="padding:8px 20px; font-size:0.8125rem">Create Campaign</button>
+  </div>
+</div>
+
+<h3>Campaign Cards</h3>
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:24px">
+  <!-- In progress card -->
+  <div class="card-demo">
+    <div class="card-img"></div>
+    <div class="card-body">
+      <div class="card-category">Community</div>
+      <div class="card-title">Baby Blankets for Carle Pediatrics</div>
+      <div class="card-desc">Help provide a warm blanket for every child entering Carle Hospital this winter.</div>
+      <div class="progress-track"><div class="progress-fill brand" style="width:42%"></div></div>
+      <div class="card-stats">
+        <span class="card-raised" style="color:var(--brand-dark)">$210.00 raised</span>
+        <span class="card-goal">$500 goal</span>
+      </div>
+      <div class="card-views">4,200 ad views</div>
+    </div>
+  </div>
+
+  <!-- Nearly funded card -->
+  <div class="card-demo">
+    <div class="card-img" style="background: linear-gradient(135deg, rgba(232,163,23,0.1), rgba(242,140,40,0.08)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=400&h=200&fit=crop') center/cover"></div>
+    <div class="card-body">
+      <div class="card-category">Education</div>
+      <div class="card-title">UIUC Books for Kids Drive</div>
+      <div class="card-desc">Provide books to underprivileged children in the Champaign-Urbana school district.</div>
+      <div class="progress-track"><div class="progress-fill warning" style="width:87%"></div></div>
+      <div class="card-stats">
+        <span class="card-raised" style="color:var(--warning)">$435.00 raised</span>
+        <span class="card-goal">$500 goal</span>
+      </div>
+      <div class="card-views">8,700 ad views · <span style="color:var(--warning); font-weight:700">Almost there!</span></div>
+    </div>
+  </div>
+
+  <!-- Fully funded card -->
+  <div class="card-demo">
+    <div class="card-img" style="background: linear-gradient(135deg, rgba(52,168,83,0.12), rgba(52,168,83,0.05)), url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=200&fit=crop') center/cover"></div>
+    <div class="card-body">
+      <div class="card-category" style="color:var(--success)">Health</div>
+      <div class="card-title">CU Food Bank Thanksgiving Meals</div>
+      <div class="card-desc">Thanksgiving meals for 200 families in the Champaign-Urbana area.</div>
+      <div class="progress-track"><div class="progress-fill success" style="width:100%"></div></div>
+      <div class="card-stats">
+        <span class="card-raised" style="color:var(--success)">$1,000.00 raised</span>
+        <span class="badge badge-success" style="margin-left:auto">Fully Funded</span>
+      </div>
+      <div class="card-views">20,000 ad views</div>
+    </div>
+  </div>
+</div>
+
+<!-- WATCH AD CTA -->
+<h3 style="margin-top:32px">Watch Ad CTA (Campaign Detail)</h3>
+<div class="watch-cta">
+  <div class="watch-cta-label">Support this campaign — no money needed</div>
+  <div class="watch-cta-row">
+    <div class="watch-cta-icon">&#9654;</div>
+    <div>
+      <div class="watch-cta-text">Watch an Ad to Raise $0.05</div>
+      <div class="watch-cta-sub">30 second video · funds go directly to this campaign</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR STATES -->
+<h3 style="margin-top:32px">Progress Bar States</h3>
+<div style="max-width:400px; display:flex; flex-direction:column; gap:16px">
+  <div>
+    <div style="font-size:0.75rem; color:var(--text-tertiary); margin-bottom:4px">Just started (5%)</div>
+    <div class="progress-track"><div class="progress-fill brand" style="width:5%"></div></div>
+  </div>
+  <div>
+    <div style="font-size:0.75rem; color:var(--text-tertiary); margin-bottom:4px">In progress (42%)</div>
+    <div class="progress-track"><div class="progress-fill brand" style="width:42%"></div></div>
+  </div>
+  <div>
+    <div style="font-size:0.75rem; color:var(--text-tertiary); margin-bottom:4px">Almost there (87%)</div>
+    <div class="progress-track"><div class="progress-fill warning" style="width:87%"></div></div>
+  </div>
+  <div>
+    <div style="font-size:0.75rem; color:var(--text-tertiary); margin-bottom:4px">Fully funded (100%)</div>
+    <div class="progress-track"><div class="progress-fill success" style="width:100%"></div></div>
+  </div>
+</div>
+
+<!-- COLOR ROLE SUMMARY -->
+<h2>Color Roles Summary</h2>
+<div style="background:var(--bg-secondary); border-radius:var(--radius-lg); padding:24px; font-size:0.875rem; line-height:1.8">
+  <div><span style="display:inline-block;width:14px;height:14px;background:var(--brand);border-radius:3px;vertical-align:middle;margin-right:8px"></span><strong>Orange (Brand)</strong> — Logo, category badges, progress bars, accent text, brand elements</div>
+  <div><span style="display:inline-block;width:14px;height:14px;background:var(--primary);border-radius:3px;vertical-align:middle;margin-right:8px"></span><strong>Blue (Primary)</strong> — Main CTAs (Take Part, Watch Ad, Create Campaign), active nav links, interactive elements</div>
+  <div><span style="display:inline-block;width:14px;height:14px;background:var(--success);border-radius:3px;vertical-align:middle;margin-right:8px"></span><strong>Green (Success)</strong> — Fully funded campaigns, completion states, success messages</div>
+  <div><span style="display:inline-block;width:14px;height:14px;background:var(--warning);border-radius:3px;vertical-align:middle;margin-right:8px"></span><strong>Amber (Warning)</strong> — Almost funded (>80%), urgency cues</div>
+</div>
+
+</body>
+</html>

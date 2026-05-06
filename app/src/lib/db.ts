@@ -50,7 +50,6 @@ interface AdViewRow {
 const rowToAdView = (row: AdViewRow): AdView => ({
   id: row.id,
   campaignId: row.campaign_id,
-  viewerName: "Anonymous",
   adTitle: row.ad_title,
   amountCredited: centsToDollars(row.amount_credited),
   viewedAt: new Date(row.viewed_at),

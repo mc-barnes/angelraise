@@ -26,7 +26,6 @@ export interface Campaign {
 export interface AdView {
   id: string;
   campaignId: string;
-  viewerName: string;
   adTitle: string;
   amountCredited: number;
   viewedAt: Date;

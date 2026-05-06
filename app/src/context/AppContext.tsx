@@ -10,7 +10,7 @@ interface AppState {
   adViews: AdView[];
   ads: Ad[];
   addCampaign: (campaign: Omit<Campaign, "id" | "raisedAmount" | "totalAdViews" | "costPerView" | "createdAt">) => string;
-  recordAdView: (campaignId: string, adTitle: string, viewerName: string) => void;
+  recordAdView: (campaignId: string, adTitle: string) => void;
   getRandomAd: () => Ad;
 }
 
@@ -38,11 +38,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   const recordAdView = useCallback(
-    (campaignId: string, adTitle: string, viewerName: string) => {
+    (campaignId: string, adTitle: string) => {
       const view: AdView = {
         id: crypto.randomUUID(),
         campaignId,
-        viewerName,
         adTitle,
         amountCredited: COST_PER_VIEW,
         viewedAt: new Date(),

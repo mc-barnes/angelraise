@@ -182,9 +182,7 @@ function ActivityFeed({ views }: { views: AdView[] }) {
               key={view.id}
               className="text-sm text-[#5E6572] bg-[#F8F9FA] rounded-[10px] px-3 py-2.5 border border-[#E8EAED]"
             >
-              <span className="font-semibold text-[#1A1D21]">
-                {view.viewerName}
-              </span>{" "}
+              <span className="font-semibold text-[#1A1D21]">Anonymous</span>{" "}
               watched &ldquo;{view.adTitle}&rdquo; —{" "}
               <span className="font-semibold text-[#34A853]">
                 ${view.amountCredited.toFixed(2)}

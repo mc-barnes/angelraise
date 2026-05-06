@@ -175,6 +175,12 @@ export default function HeroMarquee({
               >
                 Watch an ad for this campaign
               </Link>
+              <Link
+                href="#campaigns"
+                className="mt-2 block w-full text-center py-2 text-[13px] font-semibold text-[#5E6572] hover:text-[#1A1D21] transition-colors"
+              >
+                Browse all campaigns →
+              </Link>
             </div>
           </div>
         </div>

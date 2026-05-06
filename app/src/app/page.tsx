@@ -25,6 +25,7 @@ export default async function HomePage() {
   const fundedCount = campaigns.filter(
     (c) => c.raisedAmount >= c.goalAmount
   ).length;
+  const activeCount = campaigns.length - fundedCount;
 
   const marquee =
     campaigns.find((c) => c.id === MARQUEE_CAMPAIGN_ID) ?? null;
@@ -50,47 +51,16 @@ export default async function HomePage() {
         fundedCount={fundedCount}
       />
       <div className="max-w-6xl mx-auto px-6 py-8">
-      {/* Stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <div className="p-4 rounded-[10px] bg-[#FEF3E8] border border-[#F28C28]/20">
-          <p className="text-xs font-medium text-[#C96F1A] uppercase tracking-wider">
-            Total Raised
-          </p>
-          <p className="font-[family-name:var(--font-display)] text-xl font-extrabold text-[#1A1D21] mt-1">
-            ${totalRaised.toFixed(0)}
-          </p>
-        </div>
-        <div className="p-4 rounded-[10px] bg-[#EBF3FE] border border-[#2B7DE9]/20">
-          <p className="text-xs font-medium text-[#2B7DE9] uppercase tracking-wider">
-            Ad Views
-          </p>
-          <p className="font-[family-name:var(--font-display)] text-xl font-extrabold text-[#1A1D21] mt-1">
-            {totalViews.toLocaleString()}
-          </p>
-        </div>
-        <div className="p-4 rounded-[10px] bg-[#E6F5EB] border border-[#34A853]/20">
-          <p className="text-xs font-medium text-[#34A853] uppercase tracking-wider">
-            Fully Funded
-          </p>
-          <p className="font-[family-name:var(--font-display)] text-xl font-extrabold text-[#1A1D21] mt-1">
-            {fundedCount}
-          </p>
-        </div>
-        <div className="p-4 rounded-[10px] bg-[#F8F9FA] border border-[#E8EAED]">
-          <p className="text-xs font-medium text-[#8C939E] uppercase tracking-wider">
-            Active
-          </p>
-          <p className="font-[family-name:var(--font-display)] text-xl font-extrabold text-[#1A1D21] mt-1">
-            {campaigns.length - fundedCount}
-          </p>
-        </div>
-      </div>
-
       {/* Trending: horizontal scroll */}
       <div className="mb-8">
-        <h2 className="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-wider text-[#8C939E] mb-3">
-          Trending Now
-        </h2>
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-wider text-[#8C939E]">
+            Trending Now
+          </h2>
+          <span className="text-xs text-[#8C939E]">
+            {activeCount} active {activeCount === 1 ? "campaign" : "campaigns"}
+          </span>
+        </div>
         <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 scrollbar-hide">
           {trending.map((c) => (
             <Link
@@ -128,7 +98,9 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <CategoryFilter campaigns={campaigns} />
+      <div id="campaigns" className="scroll-mt-6">
+        <CategoryFilter campaigns={campaigns} />
+      </div>
     </div>
     </>
   );

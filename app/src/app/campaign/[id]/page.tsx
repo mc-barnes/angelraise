@@ -1,20 +1,20 @@
-"use client";
-
-import { use } from "react";
-import { useApp } from "@/context/AppContext";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import Link from "next/link";
 import Image from "next/image";
-import type { Campaign, AdView } from "@/data/types";
+import { getCampaign, listRecentAdViewsForCampaign } from "@/lib/db";
+import type { AdView, Campaign } from "@/data/types";
 
-export default function CampaignDetailPage({
+export const dynamic = "force-dynamic";
+
+export default async function CampaignDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params);
-  const { campaigns, adViews } = useApp();
+  const { id } = await params;
+  const { env } = await getCloudflareContext({ async: true });
+  const campaign = await getCampaign(env.DB, id);
 
-  const campaign = campaigns.find((c) => c.id === id);
   if (!campaign) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-16 text-center">
@@ -26,17 +26,28 @@ export default function CampaignDetailPage({
     );
   }
 
-  const campaignViews = adViews.filter((v) => v.campaignId === id);
-  const pct = Math.min((campaign.raisedAmount / campaign.goalAmount) * 100, 100);
+  const campaignViews = await listRecentAdViewsForCampaign(env.DB, id, 5);
+  const pct = Math.min(
+    (campaign.raisedAmount / campaign.goalAmount) * 100,
+    100
+  );
 
   return (
     <div>
       {/* Hero image */}
       <div className="relative h-72 sm:h-96 overflow-hidden">
-        <Image src={campaign.imageUrl} alt={campaign.title} fill className="object-cover" />
+        <Image
+          src={campaign.imageUrl}
+          alt={campaign.title}
+          fill
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 max-w-6xl mx-auto">
-          <Link href="/" className="text-sm text-white/70 hover:text-white mb-3 inline-block">
+          <Link
+            href="/"
+            className="text-sm text-white/70 hover:text-white mb-3 inline-block"
+          >
             &larr; Back to campaigns
           </Link>
           <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#FEF3E8] text-[#C96F1A] mb-3 ml-4">
@@ -54,12 +65,16 @@ export default function CampaignDetailPage({
           {/* Left: info */}
           <div className="md:col-span-3">
             <div className="flex items-center gap-2 text-sm text-[#5E6572] mb-5">
-              <span className="font-semibold text-[#1A1D21]">{campaign.hostName}</span>
+              <span className="font-semibold text-[#1A1D21]">
+                {campaign.hostName}
+              </span>
               <span className="text-[#D1D5DB]">&middot;</span>
               <span>{campaign.hostDescription}</span>
             </div>
 
-            <p className="text-[#5E6572] leading-relaxed mb-8">{campaign.description}</p>
+            <p className="text-[#5E6572] leading-relaxed mb-8">
+              {campaign.description}
+            </p>
 
             <div className="border-t border-[#E8EAED] pt-6">
               <ActivityFeed views={campaignViews} />
@@ -81,7 +96,9 @@ export default function CampaignDetailPage({
                 <ProgressBar campaign={campaign} />
                 <div className="flex justify-between text-xs text-[#8C939E] mt-2">
                   <span>{Math.round(pct)}% funded</span>
-                  <span>{campaign.totalAdViews.toLocaleString()} ad views</span>
+                  <span>
+                    {campaign.totalAdViews.toLocaleString()} ad views
+                  </span>
                 </div>
               </div>
 
@@ -105,7 +122,10 @@ export default function CampaignDetailPage({
 /* ── Shared components ── */
 
 function ProgressBar({ campaign }: { campaign: Campaign }) {
-  const pct = Math.min((campaign.raisedAmount / campaign.goalAmount) * 100, 100);
+  const pct = Math.min(
+    (campaign.raisedAmount / campaign.goalAmount) * 100,
+    100
+  );
   const funded = campaign.raisedAmount >= campaign.goalAmount;
   return (
     <div className="h-3 bg-[#F1F3F5] rounded-full overflow-hidden">
@@ -127,15 +147,21 @@ function HowItWorks({ costPerView }: { costPerView: number }) {
       </h4>
       <ol className="text-sm text-[#5E6572] space-y-2">
         <li className="flex gap-2">
-          <span className="w-5 h-5 rounded-full bg-[#FEF3E8] text-[#C96F1A] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+          <span className="w-5 h-5 rounded-full bg-[#FEF3E8] text-[#C96F1A] text-xs font-bold flex items-center justify-center flex-shrink-0">
+            1
+          </span>
           Watch a short video ad (~15 seconds)
         </li>
         <li className="flex gap-2">
-          <span className="w-5 h-5 rounded-full bg-[#FEF3E8] text-[#C96F1A] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+          <span className="w-5 h-5 rounded-full bg-[#FEF3E8] text-[#C96F1A] text-xs font-bold flex items-center justify-center flex-shrink-0">
+            2
+          </span>
           ${costPerView.toFixed(2)} is credited to this campaign
         </li>
         <li className="flex gap-2">
-          <span className="w-5 h-5 rounded-full bg-[#FEF3E8] text-[#C96F1A] text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+          <span className="w-5 h-5 rounded-full bg-[#FEF3E8] text-[#C96F1A] text-xs font-bold flex items-center justify-center flex-shrink-0">
+            3
+          </span>
           Repeat to raise more — no money from your pocket
         </li>
       </ol>
@@ -152,9 +178,18 @@ function ActivityFeed({ views }: { views: AdView[] }) {
       ) : (
         <ul className="space-y-2">
           {views.slice(0, 5).map((view) => (
-            <li key={view.id} className="text-sm text-[#5E6572] bg-[#F8F9FA] rounded-[10px] px-3 py-2.5 border border-[#E8EAED]">
-              <span className="font-semibold text-[#1A1D21]">{view.viewerName}</span>{" "}
-              watched &ldquo;{view.adTitle}&rdquo; — <span className="font-semibold text-[#34A853]">${view.amountCredited.toFixed(2)}</span> raised
+            <li
+              key={view.id}
+              className="text-sm text-[#5E6572] bg-[#F8F9FA] rounded-[10px] px-3 py-2.5 border border-[#E8EAED]"
+            >
+              <span className="font-semibold text-[#1A1D21]">
+                {view.viewerName}
+              </span>{" "}
+              watched &ldquo;{view.adTitle}&rdquo; —{" "}
+              <span className="font-semibold text-[#34A853]">
+                ${view.amountCredited.toFixed(2)}
+              </span>{" "}
+              raised
             </li>
           ))}
         </ul>

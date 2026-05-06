@@ -132,25 +132,42 @@ Read `DESIGN_SYSTEM.md` before any visual changes. Key tokens:
 - Horizontal scroll touch behavior on Trending cards
 - Hamburger menu for Header on small screens
 
+#### 11. Marketing Hero on Home (above campaign grid)
+- Tall hero/explainer stack above the existing campaign list at `/`
+- Explains the AngelRaise model to cold visitors: raise money for nonprofits just by watching ads, no donations required
+- Comp: DonorsChoose marketing landing (emotional hero → featured projects → trust signals), but flipped — the "ask" is attention, not money
+- Primary CTA: browse / pick a campaign to support; secondary: start a campaign
+- Returning users scroll past it to the existing campaign grid
+
+#### 12. For Nonprofits page
+- Dedicated landing for nonprofits / hosts considering starting a campaign
+- How it works on the host side, eligibility, payout model, example campaigns
+- CTA: Start a campaign (gates on auth — see P0 #1)
+
+#### 13. For Businesses page
+- Dedicated landing for businesses interested in advertising on AngelRaise
+- Pitch: ad spend = direct nonprofit funding + brand alignment
+- Inventory / targeting / CPM overview, CTA: contact us or join waitlist
+
 ### P2 — Platform & Scale
 
-#### 11. Host Dashboard
+#### 14. Host Dashboard
 - Campaign analytics for hosts (views over time, funding velocity, top referrers)
 - Edit campaign (title, description, goal)
 - Pause/unpause campaign
 - Withdraw funds (placeholder — needs payment integration)
 
-#### 12. Admin Panel
+#### 15. Admin Panel
 - Review and approve new campaigns before they go live
 - Flag/remove inappropriate content
 - Platform-wide analytics (total raised, DAU, ad completion rate)
 
-#### 13. Real Ad Network Integration
+#### 16. Real Ad Network Integration
 - Replace mock ads with a real ad provider (Google AdSense, or direct partnerships)
 - Dynamic cost-per-view based on actual ad revenue
 - Ad targeting based on user interests / campaign category
 
-#### 14. Dark Mode
+#### 17. Dark Mode
 - Extend DESIGN_SYSTEM.md with dark palette
 - Add theme toggle to Header
 - Persist preference in localStorage

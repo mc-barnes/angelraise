@@ -30,11 +30,3 @@ export interface AdView {
   amountCredited: number;
   viewedAt: Date;
 }
-
-export interface Ad {
-  id: string;
-  title: string;
-  videoUrl: string;
-  durationSeconds: number;
-  advertiserName: string;
-}

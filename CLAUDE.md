@@ -28,14 +28,28 @@ angelraise/
 ```
 
 ## Commands
-- **Dev**: `cd app && pnpm dev` → http://localhost:3000
-- **Build**: `cd app && pnpm build`
+- **Dev (canonical, D1-aware)**: `cd app && pnpm exec wrangler dev --port 8787 --local` → http://localhost:8787
+- **Dev (UI-only, no D1)**: `cd app && pnpm dev` → http://localhost:3000
+- **Build (Next)**: `cd app && pnpm build`
+- **Build (worker bundle)**: `cd app && pnpm build:cf`
 - **Deploy**: `cd app && pnpm deploy` (builds + deploys to Cloudflare)
 
+## D1 (after schema or seed changes)
+- **Local apply**: `cd app && pnpm exec wrangler d1 migrations apply angelraise --local`
+- **Local seed**: `cd app && pnpm exec wrangler d1 execute angelraise --local --file=migrations/0002_seed.sql`
+- **Remote (prod) apply**: `cd app && pnpm exec wrangler d1 migrations apply angelraise --remote`
+- **Remote (prod) seed**: `cd app && pnpm exec wrangler d1 execute angelraise --remote --file=migrations/0002_seed.sql`
+- **Inspect**: `pnpm exec wrangler d1 execute angelraise --local --command="SELECT ..."`
+- **Regenerate env types** (after wrangler.jsonc changes): `cd app && pnpm cf-typegen`
+
 ## Key Files
-- `app/src/context/AppContext.tsx` — all shared state, $0.05/view
-- `app/src/data/mockData.ts` — 15 seeded campaigns, 4 mock ads
-- `app/src/data/types.ts` — Campaign, AdView, Ad interfaces
+- `app/src/lib/db.ts` — typed D1 query helpers + cents↔dollars mappers; recordAdView uses in-batch SQL subqueries to prevent over-fund races
+- `app/src/lib/session.ts` — anon session cookie (`ar_anon`, UUID-validated, Secure derived from request transport)
+- `app/src/lib/validation.ts` — input validators for /api/campaigns and /api/ad-views
+- `app/migrations/0001_initial.sql` — schema (integer cents, CHECK constraints)
+- `app/migrations/0002_seed.sql` — 15 seeded campaigns
+- `app/src/data/types.ts` — Campaign, AdView, CampaignCategory interfaces
+- `app/wrangler.jsonc` — D1 binding (`DB`) + Workers Rate Limit binding (`AD_VIEW_RATE_LIMITER`, 10 req/min)
 
 ## Design System
 Read `DESIGN_SYSTEM.md` before any visual changes. Key tokens:
@@ -47,6 +61,12 @@ Read `DESIGN_SYSTEM.md` before any visual changes. Key tokens:
 ## v1 Status (Complete)
 - 5 screens: Home (Dashboard), Campaign Detail (Hero), Watch Ad, Create Campaign, My Impact
 - All gates passed, code review passed, deployed to Cloudflare
+
+## v2 P0 #4 — D1 Persistence (Complete)
+- Cloudflare D1 schema (integer cents, CHECK constraints) + 15-campaign seed
+- Server Components for reads (Home, Detail, Impact); Route Handlers for writes
+- POST /api/campaigns (validated, dollars→cents in db.ts), POST /api/ad-views (rate-limited 10/min/IP, atomic batch with in-batch SQL subqueries to prevent over-fund races, anon ar_anon cookie)
+- AppContext + mockData removed; all data flows through D1
 
 ---
 

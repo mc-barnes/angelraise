@@ -26,5 +26,3 @@ export const shadow = {
   md: "0 4px 14px rgba(0,0,0,0.08)",
   lg: "0 10px 30px rgba(0,0,0,0.1)",
 } as const;
-
-export const COST_PER_VIEW = 0.05;

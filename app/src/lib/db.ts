@@ -179,57 +179,63 @@ export const recordAdView = async (
   db: D1Database,
   input: RecordAdViewInput
 ): Promise<RecordAdViewResult> => {
-  const campaign = await db
-    .prepare(
-      "SELECT goal_amount, raised_amount, cost_per_view FROM campaigns WHERE id = ?"
-    )
-    .bind(input.campaignId)
-    .first<{
-      goal_amount: number;
-      raised_amount: number;
-      cost_per_view: number;
-    }>();
-
-  if (!campaign) return { ok: false, error: "not_found" };
-  if (campaign.raised_amount >= campaign.goal_amount) {
-    return { ok: false, error: "fully_funded" };
-  }
-
-  const remainingCents = campaign.goal_amount - campaign.raised_amount;
-  const deltaCents = Math.min(campaign.cost_per_view, remainingCents);
+  // The amount_credited and the funded check are computed in SQL so the
+  // read-decide-write happens inside the atomic batch. D1 serialises batches
+  // against a single database, so concurrent callers see each other's writes
+  // and over-fund races are eliminated.
   const id = crypto.randomUUID();
   const now = Date.now();
-  const newRaisedCents = campaign.raised_amount + deltaCents;
 
-  await db.batch([
+  const results = await db.batch([
     db
       .prepare(
         `INSERT INTO ad_views
            (id, campaign_id, user_id, anon_session_id, ad_title, amount_credited, viewed_at)
-         VALUES (?, ?, NULL, ?, ?, ?, ?)`
+         SELECT ?, ?, NULL, ?, ?,
+                MIN(c.cost_per_view, c.goal_amount - c.raised_amount), ?
+           FROM campaigns c
+          WHERE c.id = ? AND c.raised_amount < c.goal_amount`
       )
       .bind(
         id,
         input.campaignId,
         input.anonSessionId,
         input.adTitle,
-        deltaCents,
-        now
+        now,
+        input.campaignId
       ),
     db
       .prepare(
         `UPDATE campaigns
-            SET raised_amount = raised_amount + ?,
-                total_ad_views = total_ad_views + 1
+            SET raised_amount = raised_amount
+                  + COALESCE((SELECT amount_credited FROM ad_views WHERE id = ?), 0),
+                total_ad_views = total_ad_views
+                  + (CASE WHEN EXISTS (SELECT 1 FROM ad_views WHERE id = ?) THEN 1 ELSE 0 END)
           WHERE id = ?`
       )
-      .bind(deltaCents, input.campaignId),
+      .bind(id, id, input.campaignId),
+    db
+      .prepare("SELECT amount_credited FROM ad_views WHERE id = ?")
+      .bind(id),
+    db
+      .prepare("SELECT raised_amount FROM campaigns WHERE id = ?")
+      .bind(input.campaignId),
   ]);
+
+  const adViewRows = results[2].results as { amount_credited: number }[];
+  const campaignRows = results[3].results as { raised_amount: number }[];
+
+  if (campaignRows.length === 0) {
+    return { ok: false, error: "not_found" };
+  }
+  if (adViewRows.length === 0) {
+    return { ok: false, error: "fully_funded" };
+  }
 
   return {
     ok: true,
     id,
-    amountCredited: centsToDollars(deltaCents),
-    raisedAmount: centsToDollars(newRaisedCents),
+    amountCredited: centsToDollars(adViewRows[0].amount_credited),
+    raisedAmount: centsToDollars(campaignRows[0].raised_amount),
   };
 };

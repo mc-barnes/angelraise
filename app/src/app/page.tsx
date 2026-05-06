@@ -4,8 +4,12 @@ import Image from "next/image";
 import { listCampaigns } from "@/lib/db";
 import type { Campaign } from "@/data/types";
 import CategoryFilter from "./_components/CategoryFilter";
+import HeroMarquee from "./_components/HeroMarquee";
 
 export const dynamic = "force-dynamic";
+
+// Hand-curated marquee for v1. Rotation logic intentionally deferred.
+const MARQUEE_CAMPAIGN_ID = "00000000-0000-4000-8000-000000000001";
 
 const pct = (c: Campaign): number =>
   c.goalAmount === 0
@@ -22,6 +26,9 @@ export default async function HomePage() {
     (c) => c.raisedAmount >= c.goalAmount
   ).length;
 
+  const marquee =
+    campaigns.find((c) => c.id === MARQUEE_CAMPAIGN_ID) ?? null;
+
   const now = Date.now();
   const trending = [...campaigns]
     .filter((c) => c.raisedAmount < c.goalAmount)
@@ -35,7 +42,14 @@ export default async function HomePage() {
     .slice(0, 5);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8">
+    <>
+      <HeroMarquee
+        marquee={marquee}
+        totalRaised={totalRaised}
+        totalViews={totalViews}
+        fundedCount={fundedCount}
+      />
+      <div className="max-w-6xl mx-auto px-6 py-8">
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <div className="p-4 rounded-[10px] bg-[#FEF3E8] border border-[#F28C28]/20">
@@ -116,5 +130,6 @@ export default async function HomePage() {
 
       <CategoryFilter campaigns={campaigns} />
     </div>
+    </>
   );
 }

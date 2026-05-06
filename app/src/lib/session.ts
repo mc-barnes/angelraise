@@ -14,7 +14,10 @@ export const getAnonSession = async (): Promise<string | null> => {
   return value;
 };
 
-export const setAnonSession = async (id: string): Promise<void> => {
+export const setAnonSession = async (
+  id: string,
+  options: { secure: boolean }
+): Promise<void> => {
   const store = await cookies();
   store.set({
     name: COOKIE_NAME,
@@ -23,6 +26,6 @@ export const setAnonSession = async (id: string): Promise<void> => {
     sameSite: "lax",
     path: "/",
     maxAge: ONE_YEAR_SECONDS,
-    secure: process.env.NODE_ENV === "production",
+    secure: options.secure,
   });
 };

@@ -9,6 +9,21 @@ interface HeroMarqueeProps {
   fundedCount: number;
 }
 
+// Hero spans up to 1152px wide on a 2x display = 2304 source pixels needed.
+// Seeded Unsplash URLs request only w=600, which the optimizer can't upscale.
+const upscaleUnsplashSource = (url: string, width = 2400): string => {
+  if (!url.includes("images.unsplash.com")) return url;
+  try {
+    const u = new URL(url);
+    u.searchParams.set("w", String(width));
+    u.searchParams.delete("h");
+    if (!u.searchParams.has("fit")) u.searchParams.set("fit", "crop");
+    return u.toString();
+  } catch {
+    return url;
+  }
+};
+
 export default function HeroMarquee({
   marquee,
   totalRaised,
@@ -21,6 +36,8 @@ export default function HeroMarquee({
     marquee.goalAmount === 0
       ? 0
       : Math.min((marquee.raisedAmount / marquee.goalAmount) * 100, 100);
+
+  const heroImageSrc = upscaleUnsplashSource(marquee.imageUrl);
 
   return (
     <>
@@ -66,7 +83,7 @@ export default function HeroMarquee({
         {/* Hero block with full-bleed image */}
         <div className="relative rounded-[20px] overflow-hidden bg-[#1A1D21] min-h-[480px]">
           <Image
-            src={marquee.imageUrl}
+            src={heroImageSrc}
             alt={marquee.title}
             fill
             sizes="(max-width: 1152px) 100vw, 1152px"

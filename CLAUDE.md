@@ -7,7 +7,7 @@ Watch ads to raise money for nonprofits — no donations required.
 - **Fonts**: Plus Jakarta Sans (display), Nunito Sans (body)
 - **Hosting**: Cloudflare Workers via @opennextjs/cloudflare
 - **State**: React Context (client-only, resets on reload)
-- **Domain**: https://angelraise.ontheclock.live
+- **Domain**: https://angelraise.mccaybarnes.health
 - **Repo**: https://github.com/mc-barnes/angelraise
 
 ## Project Structure

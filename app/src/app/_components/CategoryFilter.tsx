@@ -89,7 +89,7 @@ export default function CategoryFilter({
                 </p>
               </div>
 
-              <div className="flex-shrink-0 flex items-center gap-3 w-40">
+              <div className="flex-shrink-0 flex items-center gap-2 sm:gap-3 w-24 sm:w-40">
                 <div className="flex-1 h-2 bg-[#F1F3F5] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
